@@ -1,5 +1,6 @@
 const express=require('express');
 const cors=require('cors');
+const jwt=require('jsonwebtoken')
 const { MongoClient, ServerApiVersion } = require('mongodb');
 const app=express();
 const port= process.env.PORT || 5000;
@@ -32,7 +33,18 @@ async function run() {
     await client.connect();
 
 
+    app.post('/api/v1/auth/access-token',(req,res)=>{
+        const user=req.body;
+        const token= jwt.sign(user,process.env.SECRET_ACCESS_TOKEN,{expiresIn:'1h'})
+        res.cookie('access-token',token,{
+            httpOnly: true,
+            secure: true,
+            sameSite: 'none',
+        })
+        .send({success:true});
+    })
 
+   
 
 
     await client.db("admin").command({ ping: 1 });
