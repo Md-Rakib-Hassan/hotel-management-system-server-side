@@ -33,6 +33,16 @@ async function run() {
     await client.connect();
 
 
+    const dataBase=client.db('BookHotel');
+
+    app.get('/api/v1/hotel-details',async(req, res) => {
+        const coursor=dataBase.collection('Hotel details').find();
+        const result= await coursor.toArray();
+        res.send(result);
+
+    })
+
+
     app.post('/api/v1/auth/access-token',(req,res)=>{
         const user=req.body;
         const token= jwt.sign(user,process.env.SECRET_ACCESS_TOKEN,{expiresIn:'1h'})
@@ -43,6 +53,8 @@ async function run() {
         })
         .send({success:true});
     })
+
+
 
    
 
