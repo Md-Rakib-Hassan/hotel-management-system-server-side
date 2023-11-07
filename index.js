@@ -74,6 +74,17 @@ async function run() {
       res.send(result);
     })
 
+    app.get('/api/v1/reviews',async(req, res) => {
+
+      const coursor=dataBase.collection('Reviews').find();
+      const result= await coursor.toArray();
+      res.send(result);
+    })
+
+
+
+
+
     app.get('/api/v1/room/:roomId',async(req, res) => {
       const result= await dataBase.collection('Hotel details').findOne({_id: new ObjectId(req.params.roomId)});
       res.send(result);
