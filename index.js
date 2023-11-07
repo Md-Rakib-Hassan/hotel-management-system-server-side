@@ -1,15 +1,20 @@
 const express=require('express');
 const cors=require('cors');
 const jwt=require('jsonwebtoken')
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const app=express();
 const port= process.env.PORT || 5000;
 require('dotenv').config();
 
 
 // middleware
-app.use(cors());
+app.use(cors({
+  origin:'http://localhost:5173', 
+  credentials:true,           
+  optionSuccessStatus:200
+}));
 app.use(express.json());
+
 
 
 
@@ -34,11 +39,38 @@ async function run() {
 
 
     const dataBase=client.db('BookHotel');
-
+//http://localhost:5000/api/v1/hotel-details?sortField=price&sortOrder=asc&rangeField=price&rangeValue=2000
     app.get('/api/v1/hotel-details',async(req, res) => {
-        const coursor=dataBase.collection('Hotel details').find();
+        let sortQuery={};
+        let rangeQuery={};
+
+        const {sortField,sortOrder,rangeField,rangeValue}=req.query;
+
+        if(sortField && sortOrder){
+          sortQuery[sortField]=sortOrder;
+        }
+        if(rangeField && rangeValue){
+          rangeQuery[rangeField]={$lt:parseInt(rangeValue)};
+        }
+      
+
+        const coursor=dataBase.collection('Hotel details').find(rangeQuery).sort(sortQuery);
         const result= await coursor.toArray();
         res.send(result);
+
+    })
+
+    app.get('/api/v1/basic-data',async(req, res) => {
+
+      const coursor=dataBase.collection('Basic Data').find();
+      const result= await coursor.toArray();
+      res.send(result);
+    })
+
+    app.get('/api/v1/room/:roomId',async(req, res) => {
+      const result= await dataBase.collection('Hotel details').findOne({_id: new ObjectId(req.params.roomId)});
+      res.send(result);
+
 
     })
 
