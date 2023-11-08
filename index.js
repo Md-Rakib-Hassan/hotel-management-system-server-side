@@ -48,16 +48,22 @@ async function run() {
         
 
         const {sortField,sortOrder,pricemin,pricemax,membermin,membermax,roommin,roommax}=req.query;
-        console.log(pricemin,pricemax,membermin,membermax,roommin,roommax);
+        let rangeQuery={};
 
         if(sortField && sortOrder){
           sortQuery[sortField]=sortOrder;
         }
-        let rangeQuery={$and:[
-          {price:{$gte:parseInt(pricemin)}},{price:{$lte:parseInt(pricemax)}},
-          {members:{$gte:parseInt(membermin)}},{members:{$lte:parseInt(membermax)}},
-          {feet:{$gte:parseInt(roommin)}},{feet:{$lte:parseInt(roommax)}}
-        ]};
+
+        if(pricemin && pricemax && membermin && membermax && roommin && roommax){
+
+          rangeQuery={$and:[
+            {price:{$gte:parseInt(pricemin)}},{price:{$lte:parseInt(pricemax)}},
+            {members:{$gte:parseInt(membermin)}},{members:{$lte:parseInt(membermax)}},
+            {feet:{$gte:parseInt(roommin)}},{feet:{$lte:parseInt(roommax)}}
+          ]};
+
+        }
+        
         
       
 
