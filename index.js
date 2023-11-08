@@ -40,18 +40,25 @@ async function run() {
 
     const dataBase=client.db('BookHotel');
 //http://localhost:5000/api/v1/hotel-details?sortField=price&sortOrder=asc&rangeField=price&rangeValue=2000
+
+//http://localhost:5000/api/v1/hotel-details?sortField=price&sortOrder=asc& pricemin=0 & pricemax=8000 & membermin=1&membermax=10 &roommin=0 roommax=150
+
     app.get('/api/v1/hotel-details',async(req, res) => {
         let sortQuery={};
-        let rangeQuery={};
+        
 
-        const {sortField,sortOrder,rangeField,rangeValue}=req.query;
+        const {sortField,sortOrder,pricemin,pricemax,membermin,membermax,roommin,roommax}=req.query;
+        console.log(pricemin,pricemax,membermin,membermax,roommin,roommax);
 
         if(sortField && sortOrder){
           sortQuery[sortField]=sortOrder;
         }
-        if(rangeField && rangeValue){
-          rangeQuery[rangeField]={$lte:parseInt(rangeValue)};
-        }
+        let rangeQuery={$and:[
+          {price:{$gte:parseInt(pricemin)}},{price:{$lte:parseInt(pricemax)}},
+          {members:{$gte:parseInt(membermin)}},{members:{$lte:parseInt(membermax)}},
+          {feet:{$gte:parseInt(roommin)}},{feet:{$lte:parseInt(roommax)}}
+        ]};
+        
       
 
         const coursor=dataBase.collection('Hotel details').find(rangeQuery).sort(sortQuery);
