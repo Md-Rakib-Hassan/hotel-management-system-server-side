@@ -50,7 +50,7 @@ async function run() {
           sortQuery[sortField]=sortOrder;
         }
         if(rangeField && rangeValue){
-          rangeQuery[rangeField]={$lt:parseInt(rangeValue)};
+          rangeQuery[rangeField]={$lte:parseInt(rangeValue)};
         }
       
 
@@ -81,15 +81,9 @@ async function run() {
       res.send(result);
     })
 
-
-
-
-
     app.get('/api/v1/room/:roomId',async(req, res) => {
       const result= await dataBase.collection('Hotel details').findOne({_id: new ObjectId(req.params.roomId)});
       res.send(result);
-
-
     })
 
 
