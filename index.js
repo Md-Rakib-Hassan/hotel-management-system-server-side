@@ -84,6 +84,13 @@ async function run() {
       res.send(result);
     })
 
+    app.get('/api/v1/faqs',async(req, res) => {
+
+      const coursor=dataBase.collection('faqData').find();
+      const result= await coursor.toArray();
+      res.send(result);
+    })
+
     app.get('/api/v1/house-rules',async(req, res) => {
 
       const coursor=dataBase.collection('House Rules').find();
