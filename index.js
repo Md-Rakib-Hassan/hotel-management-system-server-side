@@ -9,7 +9,7 @@ require('dotenv').config();
 
 // middleware
 app.use(cors({
-  origin:'http://localhost:5173', 
+  origin:['http://localhost:5173','https://bookhotel-ffd71.web.app','https://bookhotel-ffd71.firebaseapp.com' ],
   credentials:true,           
   optionSuccessStatus:200
 }));
@@ -64,13 +64,17 @@ async function run() {
 
         }
         
-        
-      
-
         const coursor=dataBase.collection('Hotel details').find(rangeQuery).sort(sortQuery);
         const result= await coursor.toArray();
         res.send(result);
 
+    })
+
+    app.post('/api/v1/contacts-info',async function (req, res) {
+      const contactCollection = dataBase.collection("contactsInfo");
+      const ContactInfo=req.body;
+      const result = await contactCollection.insertOne(ContactInfo);
+      res.send(result);
     })
 
     app.get('/api/v1/basic-data',async(req, res) => {
