@@ -1,6 +1,7 @@
 const express=require('express');
 const cors=require('cors');
 const jwt=require('jsonwebtoken')
+const cookieParser=require('cookie-parser');
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const app=express();
 const port= process.env.PORT || 5000;
@@ -14,6 +15,8 @@ app.use(cors({
   optionSuccessStatus:200
 }));
 app.use(express.json());
+app.use(cookieParser());
+
 
 
 
@@ -42,6 +45,21 @@ async function run() {
 //http://localhost:5000/api/v1/hotel-details?sortField=price&sortOrder=asc&rangeField=price&rangeValue=2000
 
 //http://localhost:5000/api/v1/hotel-details?sortField=price&sortOrder=asc& pricemin=0 & pricemax=8000 & membermin=1&membermax=10 &roommin=0 roommax=150
+
+const verifyToken=(req,res,next)=>{
+  const {token} = req.cookies;
+
+  if(!token){
+    return res.status(401).send({message:'You are not authorized'})
+  }
+
+  jwt.verify(token,process.env.SECRET_ACCESS_TOKEN,(err,decoded)=>{
+    if(err) return res.status(401).send({message:'You are not authorized'})
+    req.user=decoded;
+    next();
+    
+  })
+}
 
     app.get('/api/v1/hotel-details',async(req, res) => {
         let sortQuery={};
@@ -107,11 +125,22 @@ async function run() {
       res.send(result);
     })
 
-    app.get('/my-booking/:email',async (req,res)=>{
-      const Collection = dataBase.collection("Booking Room");
+    app.get('/api/v1/my-booking/:email',verifyToken,async (req,res)=>{
+
+      const queryEmail=req.params.email;
+      const tokenEmail =req.user.email;
+
+      console.log(queryEmail, tokenEmail);
+
+      if(queryEmail==tokenEmail){
+        const Collection = dataBase.collection("Booking Room");
       const coursor =Collection.find({email: `${req.params.email}`})
       const result= await coursor.toArray();
       res.send(result);
+
+      }
+
+      
 
     })
     
@@ -160,7 +189,7 @@ async function run() {
     app.post('/api/v1/auth/access-token',(req,res)=>{
         const user=req.body;
         const token= jwt.sign(user,process.env.SECRET_ACCESS_TOKEN,{expiresIn:'1h'})
-        res.cookie('access-token',token,{
+        res.cookie('token',token,{
             httpOnly: true,
             secure: true,
             sameSite: 'none',
