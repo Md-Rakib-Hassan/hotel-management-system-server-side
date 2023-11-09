@@ -91,6 +91,29 @@ async function run() {
       const result = await Collection.insertOne(ReqInfo);
       res.send(result);
     })
+   
+
+    app.post('/api/v1/subscribers',async function (req, res) {
+      const Collection = dataBase.collection("subscribers");
+      const ReqInfo=req.body;
+      const result = await Collection.insertOne(ReqInfo);
+      res.send(result);
+    })
+
+    app.post('/api/v1/booking-room',async function (req, res) {
+      const Collection = dataBase.collection("Booking Room");
+      const ReqInfo=req.body;
+      const result = await Collection.insertOne(ReqInfo);
+      res.send(result);
+    })
+
+    app.get('/my-booking/:email',async (req,res)=>{
+      const Collection = dataBase.collection("Booking Room");
+      const coursor =Collection.find({email: `${req.params.email}`})
+      const result= await coursor.toArray();
+      res.send(result);
+
+    })
     
 
     app.get('/api/v1/basic-data',async(req, res) => {
