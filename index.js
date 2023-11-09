@@ -76,6 +76,14 @@ async function run() {
       const result = await contactCollection.insertOne(ContactInfo);
       res.send(result);
     })
+    // 
+
+    app.post('/api/v1/local-guide-req',async function (req, res) {
+      const Collection = dataBase.collection("Local guide request");
+      const LocalGuideReqInfo=req.body;
+      const result = await Collection.insertOne(LocalGuideReqInfo);
+      res.send(result);
+    })
 
     app.get('/api/v1/basic-data',async(req, res) => {
 
