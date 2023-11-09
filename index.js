@@ -92,6 +92,13 @@ async function run() {
       res.send(result);
     })
 
+    app.get('/api/v1/jobsopen',async(req, res) => {
+
+      const coursor=dataBase.collection('JobOpen').find();
+      const result= await coursor.toArray();
+      res.send(result);
+    })
+
     app.get('/api/v1/faqs',async(req, res) => {
 
       const coursor=dataBase.collection('faqData').find();
