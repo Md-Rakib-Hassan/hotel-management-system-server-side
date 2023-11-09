@@ -85,6 +85,14 @@ async function run() {
       res.send(result);
     })
 
+    app.post('/api/v1/job-req',async function (req, res) {
+      const Collection = dataBase.collection("JobReq");
+      const ReqInfo=req.body;
+      const result = await Collection.insertOne(ReqInfo);
+      res.send(result);
+    })
+    
+
     app.get('/api/v1/basic-data',async(req, res) => {
 
       const coursor=dataBase.collection('Basic Data').find();
