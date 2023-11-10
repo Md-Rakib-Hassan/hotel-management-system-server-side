@@ -132,13 +132,14 @@ const verifyToken=(req,res,next)=>{
 
       console.log(queryEmail, tokenEmail);
 
-      if(queryEmail==tokenEmail){
-        const Collection = dataBase.collection("Booking Room");
+      if(queryEmail!=tokenEmail){
+        return res.status(403).send({message:'forbidden access'})
+      }
+
+      const Collection = dataBase.collection("Booking Room");
       const coursor =Collection.find({email: `${req.params.email}`})
       const result= await coursor.toArray();
       res.send(result);
-
-      }
 
       
 
@@ -195,6 +196,11 @@ const verifyToken=(req,res,next)=>{
             sameSite: 'none',
         })
         .send({success:true});
+    })
+
+    app.post('/api/v1/auth/logout',async(req,res)=>{
+      const user=req.body;
+      res.clearCookie('token',{maxAge:0}).send({logOut:true});
     })
 
 
