@@ -125,6 +125,13 @@ const verifyToken=(req,res,next)=>{
       res.send(result);
     })
 
+    app.post('/api/v1/reviews',async function (req, res) {
+      const Collection = dataBase.collection("Reviews");
+      const ReqInfo=req.body;
+      const result = await Collection.insertOne(ReqInfo);
+      res.send(result);
+    })
+
     app.get('/api/v1/my-booking/:email',verifyToken,async (req,res)=>{
 
       const queryEmail=req.params.email;
