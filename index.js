@@ -188,6 +188,13 @@ const verifyToken=(req,res,next)=>{
       res.send(result);
     })
 
+    app.get('/api/v1/reviews/:roomId',async(req, res) => {
+
+      const coursor=dataBase.collection('Reviews').find({room_id:req.params.roomId});
+      const result= await coursor.toArray();
+      res.send(result);
+    })
+
     app.get('/api/v1/galary',async(req,res)=>{
       const coursor=dataBase.collection('gallary').find();
       const result= await coursor.toArray();
