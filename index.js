@@ -218,6 +218,25 @@ const verifyToken=(req,res,next)=>{
 
 
 
+    app.put(`/api/v1/review-given/:booking_id`,async(req,res)=>{
+      const booking_id=req.params.booking_id;
+      const filter={_id: new ObjectId(booking_id)}
+      const options= {upsert: true};
+      const Collection = dataBase.collection("Booking Room");
+
+      const modified={
+        
+
+        $set: {
+          review_given:true,
+        },
+      }
+      const result= await Collection.updateOne(filter,modified,options);
+      res.send(result);
+    })
+
+
+
    
 
 
