@@ -10,7 +10,7 @@ require('dotenv').config();
 
 // middleware
 app.use(cors({
-  origin:['http://localhost:5173','https://bookhotel-ffd71.web.app','https://bookhotel-ffd71.firebaseapp.com' ],
+  origin:['http://localhost:5173','https://bookhotel-2024.netlify.app/'],
   credentials:true,           
   optionSuccessStatus:200
 }));
@@ -38,7 +38,6 @@ const client = new MongoClient(uri, {
 async function run() {
   try {
     // Connect the client to the server	(optional starting in v4.7)
-    await client.connect();
 
 
     const dataBase=client.db('BookHotel');
@@ -132,16 +131,16 @@ const verifyToken=(req,res,next)=>{
       res.send(result);
     })
 
-    app.get('/api/v1/my-booking/:email',verifyToken,async (req,res)=>{
+    app.get('/api/v1/my-booking/:email',async (req,res)=>{
 
       const queryEmail=req.params.email;
-      const tokenEmail =req.user.email;
+      // const tokenEmail =req.user.email;
 
-      console.log(queryEmail, tokenEmail);
+      // console.log(queryEmail, tokenEmail);
 
-      if(queryEmail!=tokenEmail){
-        return res.status(403).send({message:'forbidden access'})
-      }
+      // if(queryEmail!=tokenEmail){
+      //   return res.status(403).send({message:'forbidden access'})
+      // }
 
       const Collection = dataBase.collection("Booking Room");
       const coursor =Collection.find({email: `${req.params.email}`})
