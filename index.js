@@ -10,7 +10,7 @@ require('dotenv').config();
 
 // middleware
 app.use(cors({
-  origin:['http://localhost:5173','https://bookhotel-2024.netlify.app/'],
+  origin:['http://localhost:5173','https://bookhotel-2024.netlify.app'],
   credentials:true,           
   optionSuccessStatus:200
 }));
