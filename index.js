@@ -10,10 +10,11 @@ require('dotenv').config();
 
 // middleware
 app.use(cors({
-  origin:['http://localhost:5173','https://bookhotel-2024.netlify.app'],
-  credentials:true,           
-  optionSuccessStatus:200
+  origin: ['https://bookhotel-2024.netlify.app'],
+  credentials: true,
+  methods: ["GET", "POST", "PUT", "DELETE"],
 }));
+
 app.use(express.json());
 app.use(cookieParser());
 
@@ -261,9 +262,14 @@ run().catch(console.dir);
 
 
 
-app.get('/',(req, res)=>{
-    res.send('Hello World');
-})
+app.get('/', (req, res) => {
+  res.status(200).send({
+    status: "OK",
+    message: "BookHotel API is running",
+    version: "1.0.0"
+  });
+});
+
 
 app.listen(port, ()=>{
     console.log(`server listening on ${port}`);
